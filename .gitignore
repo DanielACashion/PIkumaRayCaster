@@ -1,0 +1,5 @@
+*/zig-out
+*/cdb-frags
+*/.zig-cache
+*/compile_commands.json
+c/.cache
