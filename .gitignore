@@ -3,3 +3,4 @@
 */.zig-cache
 */compile_commands.json
 c/.cache
+SDL*.dll
