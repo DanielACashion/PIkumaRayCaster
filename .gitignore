@@ -1,6 +1,6 @@
 */zig-out
 */cdb-frags
 */.zig-cache
-*/compile_commands.json
-c/.cache
+*compile_commands.json
+*.cache/
 SDL*.dll

@@ -48,6 +48,7 @@ pub fn build(b: *std.Build) !void {
     const run_artifact = b.addRunArtifact(exe);
     run_step.dependOn(&run_artifact.step);
 }
+
 const EnvFileVars = struct {
     includeFileLocation: []const u8,
     libFileLocation: []const u8,
@@ -83,6 +84,7 @@ fn readEnvFile(allocator: std.mem.Allocator) !EnvFileVars {
     };
 }
 
+// zig build
 // $content = (Get-Content cdb-frags/* -Raw) -join ""
 // $content = $content.TrimEnd(",`r`n ")
 // "[$content]" | Out-File -Encoding utf8 compile_commands.json
