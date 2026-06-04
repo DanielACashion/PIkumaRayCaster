@@ -1,7 +1,7 @@
 #include "headers/defs.h"
 #include "headers/graphics.h"
-#include "headers/textures.h"
 #include "headers/map.h"
+#include "headers/textures.h"
 #include "textures.h"
 #include <SDL.h>
 #include <limits.h>
@@ -9,9 +9,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+
 bool isRunning = false;
 int lastFrameTicks = 1;
-
 
 struct Player {
   float x;
@@ -95,9 +95,6 @@ void processInput(void) {
     break;
   }
 }
-
-
-
 
 void movePlayer(float deltaTime) {
   player.rotationAngle += player.turnDirection * player.turnSpeed * deltaTime;
@@ -198,8 +195,7 @@ void castRay(float rayAngle, int rayId) {
   float vertWallHitX = 0;
   float vertWallHitY = 0;
   int vertColor = 0;
-  while (nextVertTouchX >= 0 && nextVertTouchX <= (MAP_NUM_COLS * TILE_SIZE) &&
-         nextVertTouchY >= 0 && nextVertTouchY <= (MAP_NUM_ROWS * TILE_SIZE)) {
+  while (isInsideMap(nextVertTouchX, nextVertTouchY)) {
     float peekx = nextVertTouchX;
     if (isRayFacingLeft) {
       peekx -= 1;
@@ -262,8 +258,6 @@ void update(void) {
   castAllRays();
   lastFrameTicks = currentTicks;
 }
-
-
 
 void renderRays(void) {
   // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
