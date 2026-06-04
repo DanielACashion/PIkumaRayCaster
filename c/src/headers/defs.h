@@ -5,8 +5,8 @@
 #define MAP_NUM_ROWS 13
 #define MAP_NUM_COLS 20
 
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 400
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 800
 
 #define FOV_ANGLE (60 * PI / 180)
 #define NUM_RAYS (WINDOW_WIDTH)
@@ -14,7 +14,7 @@
 #define FPS 120
 #define FRAME_TIME_LENGTH (1000 / FPS)
 
-#define MINIMAP_SCALE_FACTOR 0.25
+#define MINIMAP_SCALE_FACTOR 0.125
 
 #define NUM_TEXTURES 8
 
