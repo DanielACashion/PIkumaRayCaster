@@ -33,10 +33,12 @@ pub fn build(b: *std.Build) !void {
         .language = .c,
         .flags = &.{"-fcommon"},
     });
+    cModule.addCSourceFile(.{
+        .file = b.path("src/map.c"),
+        .language = .c,
+        .flags = &.{"-fcommon"},
+    });
 
-    cModule.addIncludePath(b.path("src/constants.h"));
-    cModule.addIncludePath(b.path("src/textures.h"));
-    cModule.addIncludePath(b.path("src/graphics.h"));
     cModule.addIncludePath(b.path("src/headers"));
     cModule.addIncludePath(.{ .cwd_relative = fileVars.includeFileLocation }); //add headers folder
     cModule.addLibraryPath(.{ .cwd_relative = fileVars.libFileLocation }); //add lib folder

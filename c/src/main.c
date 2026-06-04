@@ -1,7 +1,7 @@
-#include "SDL_render.h"
 #include "headers/defs.h"
 #include "headers/graphics.h"
 #include "headers/textures.h"
+#include "headers/map.h"
 #include "textures.h"
 #include <SDL.h>
 #include <limits.h>
@@ -12,20 +12,6 @@
 bool isRunning = false;
 int lastFrameTicks = 1;
 
-const int map[MAP_NUM_ROWS][MAP_NUM_COLS] = {
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 1, 1, 1, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}};
 
 struct Player {
   float x;
@@ -110,37 +96,18 @@ void processInput(void) {
   }
 }
 
-int hasWallAt(float x, float y) {
-  if (x < 0 || y < 0 || x >= MAP_NUM_COLS * TILE_SIZE ||
-      y >= MAP_NUM_ROWS * TILE_SIZE) {
-    return true;
-  }
 
-  int localX = (int)(x / TILE_SIZE);
-  int localY = (int)(y / TILE_SIZE);
-  if (map[localY][localX] != 0) {
-    return true;
-  }
-  return false;
-}
 
-int wallColorAt(float x, float y) {
-  if (x < 0 || y < 0 || x >= MAP_NUM_COLS * TILE_SIZE ||
-      y >= MAP_NUM_ROWS * TILE_SIZE) {
-    return 1;
-  }
-  return map[(int)(y / TILE_SIZE)][(int)(x / TILE_SIZE)];
-}
 
 void movePlayer(float deltaTime) {
   player.rotationAngle += player.turnDirection * player.turnSpeed * deltaTime;
   float moveStep = player.walkDirection * player.walkSpeed * deltaTime;
   float newX = player.x + cos(player.rotationAngle) * moveStep;
-  if (hasWallAt(newX, player.y) == false) {
+  if (mapHasWallAt(newX, player.y) == false) {
     player.x = newX;
   }
   float newY = player.y + sin(player.rotationAngle) * moveStep;
-  if (hasWallAt(player.x, newY) == false) {
+  if (mapHasWallAt(player.x, newY) == false) {
     player.y = newY;
   }
 }
@@ -198,7 +165,7 @@ void castRay(float rayAngle, int rayId) {
     if (isRayFacingUp) {
       peeky--;
     }
-    if (hasWallAt(nextHorzTouchX, peeky)) {
+    if (mapHasWallAt(nextHorzTouchX, peeky)) {
       //
       foundHorzWallHit = true;
       horzWallHitX = nextHorzTouchX;
@@ -238,7 +205,7 @@ void castRay(float rayAngle, int rayId) {
       peekx -= 1;
     }
 
-    if (hasWallAt(peekx, nextVertTouchY)) {
+    if (mapHasWallAt(peekx, nextVertTouchY)) {
       //
       foundVertWallHit = true;
       vertWallHitX = nextVertTouchX;
@@ -296,19 +263,7 @@ void update(void) {
   lastFrameTicks = currentTicks;
 }
 
-void renderMap(void) {
-  for (int i = 0; i < MAP_NUM_ROWS; i++) {
-    for (int j = 0; j < MAP_NUM_COLS; j++) {
-      int tileX = j * TILE_SIZE;
-      int tileY = i * TILE_SIZE;
-      int tileColor = map[i][j] != 0 ? 0xFFFFFFFF : 0;
 
-      drawRect(tileX * MINIMAP_SCALE_FACTOR, tileY * MINIMAP_SCALE_FACTOR,
-               TILE_SIZE * MINIMAP_SCALE_FACTOR,
-               TILE_SIZE * MINIMAP_SCALE_FACTOR, tileColor);
-    }
-  }
-}
 
 void renderRays(void) {
   // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
