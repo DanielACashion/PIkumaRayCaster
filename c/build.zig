@@ -48,6 +48,11 @@ pub fn build(b: *std.Build) !void {
         .language = .c,
         .flags = &.{"-fcommon"},
     });
+    cModule.addCSourceFile(.{
+        .file = b.path("src/wall.c"),
+        .language = .c,
+        .flags = &.{"-fcommon"},
+    });
 
     cModule.addIncludePath(b.path("src/headers"));
     cModule.addIncludePath(.{ .cwd_relative = fileVars.includeFileLocation }); //add headers folder
