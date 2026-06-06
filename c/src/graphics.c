@@ -90,3 +90,34 @@ void drawRect(int x, int y, int width, int height, uint32_t color) {
     }
   }
 }
+
+void drawLine(int x0, int y0, int x1, int y1, uint32_t color) {
+  // draw left to right
+  int delta_x = (x1 - x0);
+  int delta_y = (y1 - y0);
+
+  int side_length = abs(delta_x) >= abs(delta_y) ? abs(delta_x) : abs(delta_y);
+  if (side_length == 0) {
+    side_length = 1;
+  }
+
+  float x_inc = delta_x / (float)side_length;
+  float y_inc = delta_y / (float)side_length;
+  int max_x = x1, min_x = x0, max_y = y1, min_y = y0;
+  if (x1 < x0) {
+    max_x = x0;
+    min_x = x1;
+  }
+  if (y1 < y0) {
+    max_y = y0;
+    min_y = y1;
+  }
+  float x = (float)x0;
+  float y = (float)y0;
+
+  for (int i = 0; i <= side_length; i++) {
+    drawPixel((int)round(x), (int)round(y), color);
+    x += x_inc;
+    y += y_inc;
+  }
+}

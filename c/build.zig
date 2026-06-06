@@ -52,6 +52,7 @@ pub fn build(b: *std.Build) !void {
     cModule.addIncludePath(b.path("src/headers"));
     cModule.addIncludePath(.{ .cwd_relative = fileVars.includeFileLocation }); //add headers folder
     cModule.addLibraryPath(.{ .cwd_relative = fileVars.libFileLocation }); //add lib folder
+
     cModule.linkSystemLibrary("SDL2main", .{}); //sdl main magic include
     cModule.linkSystemLibrary("SDL2", .{});
 
@@ -59,7 +60,7 @@ pub fn build(b: *std.Build) !void {
         .root_module = cModule,
         .name = "raycaster",
     });
-    //cModule.linkSystemLibrary("", .{});
+
     b.installArtifact(exe);
 
     //create a run step

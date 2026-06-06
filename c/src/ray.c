@@ -1,4 +1,5 @@
 #include "headers/ray.h"
+#include "graphics.h"
 #include "headers/map.h"
 #include <math.h>
 
@@ -141,13 +142,11 @@ void castAllRays(void) {
 }
 
 void renderRays(void) {
-  // SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-  // for (int i = 0; i < NUM_RAYS; i++) {
-  //   struct Ray *ray = &rays[i];
-  //   SDL_RenderDrawLine(
-  //       renderer, (player.x + (player.width * 0.5)) * MINIMAP_SCALE_FACTOR,
-  //       (player.y + (player.height * 0.5)) * MINIMAP_SCALE_FACTOR,
-  //       ray->wallhitx * MINIMAP_SCALE_FACTOR,
-  //       ray->wallhity * MINIMAP_SCALE_FACTOR);
-  // }
+  for (int i = 0; i < NUM_RAYS; i++) {
+    ray_t *ray = &rays[i];
+    drawLine((player.x) * MINIMAP_SCALE_FACTOR  + (player.width * 0.5),
+             (player.y ) * MINIMAP_SCALE_FACTOR + (player.height * 0.5),
+             ray->wallhitx * MINIMAP_SCALE_FACTOR,
+             ray->wallhity * MINIMAP_SCALE_FACTOR, 0xFF0000FF);
+  }
 }
