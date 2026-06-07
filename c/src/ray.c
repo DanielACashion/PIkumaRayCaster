@@ -20,11 +20,6 @@ void castRay(float rayAngle, int rayId) {
   ray_t *ray = &rays[rayId];
   ray->rayAngle = rayAngle;
   normalizeAngle(&ray->rayAngle);
-  bool isRayFacingDown = ray->rayAngle > 0 && ray->rayAngle < PI;
-  bool isRayFacingUp = !isRayFacingDown;
-  bool isRayFacingRight =
-      ray->rayAngle < (0.5 * PI) || ray->rayAngle > (1.5 * PI);
-  bool isRayFacingLeft = !isRayFacingRight;
   ray->wasHitVert = false;
 
   ///////////////////////////////////////
@@ -33,16 +28,16 @@ void castRay(float rayAngle, int rayId) {
   float xstep, ystep;
   float xintercept, yintercept;
   yintercept = floor(player.y / TILE_SIZE) * TILE_SIZE;
-  yintercept += isRayFacingDown ? TILE_SIZE : 0;
+  yintercept += isRayFacingDown(ray->rayAngle) ? TILE_SIZE : 0;
 
   xintercept = player.x + (yintercept - player.y) / tan(ray->rayAngle);
 
   // calc the increment value for steps
   ystep = TILE_SIZE;
-  ystep *= isRayFacingUp ? -1 : 1;
+  ystep *= isRayFacingUp(ray->rayAngle) ? -1 : 1;
 
   xstep = TILE_SIZE / tan(ray->rayAngle);
-  xstep *= (isRayFacingLeft && xstep > 0) || (isRayFacingRight && xstep < 0)
+  xstep *= (isRayFacingLeft(ray->rayAngle) && xstep > 0) || (isRayFacingRight(ray->rayAngle) && xstep < 0)
                ? -1
                : 1;
 
@@ -54,7 +49,7 @@ void castRay(float rayAngle, int rayId) {
   int horxzColor = 0;
   while (isInsideMap(nextHorzTouchX, nextHorzTouchY)) {
     float peeky = nextHorzTouchY;
-    if (isRayFacingUp) {
+    if (isRayFacingUp(ray->rayAngle)) {
       peeky--;
     }
     if (mapHasWallAt(nextHorzTouchX, peeky)) {
@@ -72,17 +67,17 @@ void castRay(float rayAngle, int rayId) {
   // vertical ray grid intersection
   bool foundVertWallHit = false;
   xintercept = floor(player.x / TILE_SIZE) * TILE_SIZE;
-  xintercept += isRayFacingRight ? TILE_SIZE : 0;
+  xintercept += isRayFacingRight(ray->rayAngle) ? TILE_SIZE : 0;
 
   yintercept = player.y + (xintercept - player.x) * tan(ray->rayAngle);
 
   // calc the increment value for steps
   xstep = TILE_SIZE;
-  xstep *= isRayFacingLeft ? -1 : 1;
+  xstep *= isRayFacingLeft(ray->rayAngle) ? -1 : 1;
 
   ystep = TILE_SIZE * tan(ray->rayAngle);
   ystep *=
-      (isRayFacingUp && ystep > 0) || (isRayFacingDown && ystep < 0) ? -1 : 1;
+      (isRayFacingUp(ray->rayAngle) && ystep > 0) || (isRayFacingDown(ray->rayAngle) && ystep < 0) ? -1 : 1;
 
   float nextVertTouchX = xintercept;
   float nextVertTouchY = yintercept;
@@ -92,7 +87,7 @@ void castRay(float rayAngle, int rayId) {
   int vertColor = 0;
   while (isInsideMap(nextVertTouchX, nextVertTouchY)) {
     float peekx = nextVertTouchX;
-    if (isRayFacingLeft) {
+    if (isRayFacingLeft(ray->rayAngle)) {
       peekx -= 1;
     }
 
@@ -144,9 +139,19 @@ void castAllRays(void) {
 void renderRays(void) {
   for (int i = 0; i < NUM_RAYS; i++) {
     ray_t *ray = &rays[i];
-    drawLine((player.x) * MINIMAP_SCALE_FACTOR  + (player.width * 0.5),
-             (player.y ) * MINIMAP_SCALE_FACTOR + (player.height * 0.5),
+    drawLine((player.x) * MINIMAP_SCALE_FACTOR + (player.width * 0.5),
+             (player.y) * MINIMAP_SCALE_FACTOR + (player.height * 0.5),
              ray->wallhitx * MINIMAP_SCALE_FACTOR,
              ray->wallhity * MINIMAP_SCALE_FACTOR, 0xFF0000FF);
   }
+}
+
+bool isRayFacingDown(float angle) { return angle > 0 && angle < PI; }
+
+bool isRayFacingUp(float angle) { return angle < 0 || angle >= PI; }
+bool isRayFacingRight(float angle) {
+  return angle < (0.5 * PI) || angle > (1.5 * PI);
+}
+bool isRayFacingLeft(float angle) {
+  return angle > (0.5 * PI) && angle < (1.5 * PI);
 }

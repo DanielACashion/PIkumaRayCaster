@@ -10,9 +10,10 @@
 
 bool initializeWindow(void);
 void destroyWindow(void);
-void clearColorBuffer(uint32_t color);
+void clearColorBuffer(color_t color);
 void renderColorBuffer(void);
-void drawPixel(int x, int y, uint32_t color);
-void drawRect(int x, int y, int width, int height, uint32_t color);
-void drawLine(int x1, int y1, int x2, int y2, uint32_t color);
+void drawPixel(int x, int y, color_t color);
+void drawRect(int x, int y, int width, int height, color_t color);
+void drawLine(int x1, int y1, int x2, int y2, color_t color);
+void changeColorIntensity(color_t* color, float factor);
 #endif

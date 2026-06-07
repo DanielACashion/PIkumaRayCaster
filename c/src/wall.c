@@ -1,4 +1,5 @@
 #include "headers/wall.h"
+#include "graphics.h"
 void renderWallProjection(void) {
   for (int i = 0; i < NUM_RAYS; i++) {
     float perpDistance =
@@ -31,11 +32,11 @@ void renderWallProjection(void) {
       int distanceFromTop = y + (wallStripHeight * 0.5) - (WINDOW_HEIGHT * 0.5);
       textureOffsetY = distanceFromTop * ((float)textHeight / wallStripHeight);
       // TEXTURE COLORING
-      uint32_t texelColor =
+      color_t texelColor =
           wallTextures[rays[i].wallColor - 1]
               .texture_buffer[(textWidth * textureOffsetY) + textureOffsetX];
-
-      drawPixel(i, y, (rays[i].wasHitVert) ? (texelColor * 1) : texelColor);
+      changeColorIntensity(&texelColor, (rays[i].wasHitVert) ? 1 : 0.75);
+      drawPixel(i, y, texelColor);
     }
 
     for (int y = wallBottomPixel; y < WINDOW_HEIGHT; y++) {

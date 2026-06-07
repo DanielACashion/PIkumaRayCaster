@@ -1,13 +1,13 @@
 
 #include "graphics.h"
-#include "textures.h"
+#include "headers/defs.h"
 #include <stdint.h>
 
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
 static SDL_Texture *colorBufferTexture = NULL;
 
-static uint32_t *colorBuffer = NULL;
+static color_t *colorBuffer = NULL;
 
 bool initializeWindow(void) {
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -43,7 +43,7 @@ bool initializeWindow(void) {
   return true;
 }
 
-void clearColorBuffer(uint32_t color) {
+void clearColorBuffer(color_t color) {
   for (int i = 0; i < WINDOW_WIDTH * WINDOW_HEIGHT; i++) {
     colorBuffer[i] = color;
   }
@@ -54,7 +54,7 @@ void clearColorBuffer(uint32_t color) {
 
 void renderColorBuffer(void) {
   SDL_UpdateTexture(colorBufferTexture, NULL, colorBuffer,
-                    (int)((uint32_t)WINDOW_WIDTH * sizeof(uint32_t)));
+                    (int)((color_t)WINDOW_WIDTH * sizeof(color_t)));
   SDL_RenderCopy(renderer, colorBufferTexture, NULL, NULL);
   SDL_RenderPresent(renderer);
 }
@@ -71,11 +71,11 @@ void destroyWindow(void) {
     SDL_DestroyTexture(colorBufferTexture);
   }
 }
-void drawPixel(int x, int y, uint32_t color) {
+void drawPixel(int x, int y, color_t color) {
   colorBuffer[(y * WINDOW_WIDTH) + x] = color;
 }
 
-void drawRect(int x, int y, int width, int height, uint32_t color) {
+void drawRect(int x, int y, int width, int height, color_t color) {
   int minx = (x < 0) ? 0 : x;
   int miny = (y < 0) ? 0 : y;
   for (int i = miny; i < y + height; i++) {
@@ -91,7 +91,7 @@ void drawRect(int x, int y, int width, int height, uint32_t color) {
   }
 }
 
-void drawLine(int x0, int y0, int x1, int y1, uint32_t color) {
+void drawLine(int x0, int y0, int x1, int y1, color_t color) {
   // draw left to right
   int delta_x = (x1 - x0);
   int delta_y = (y1 - y0);
@@ -120,4 +120,11 @@ void drawLine(int x0, int y0, int x1, int y1, uint32_t color) {
     x += x_inc;
     y += y_inc;
   }
+}
+void changeColorIntensity(color_t *color, float factor) {
+  color_t a = (*color & 0xFF000000);
+  color_t r = (*color & 0x00FF0000) * factor;
+  color_t g = (*color & 0x0000FF00) * factor;
+  color_t b = (*color & 0x000000FF)  * factor;
+  *color =  (r & 0x00FF0000) | (g & 0x0000FF00) | (b & 0x000000FF) | a;
 }
