@@ -136,7 +136,7 @@ void castAllRays(void) {
   }
 }
 
-void renderRays(void) {
+void renderMapRays(void) {
   for (int i = 0; i < NUM_RAYS; i++) {
     ray_t *ray = &rays[i];
     drawLine((player.x) * MINIMAP_SCALE_FACTOR + (player.width * 0.5),

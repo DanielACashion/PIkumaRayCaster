@@ -54,6 +54,11 @@ pub fn build(b: *std.Build) !void {
         .flags = &.{"-fcommon"},
     });
 
+    cModule.addCSourceFile(.{
+        .file = b.path("src/sprites.c"),
+        .language = .c,
+        .flags = &.{"-fcommon"},
+    });
     cModule.addIncludePath(b.path("src/headers"));
     cModule.addIncludePath(.{ .cwd_relative = fileVars.includeFileLocation }); //add headers folder
     cModule.addLibraryPath(.{ .cwd_relative = fileVars.libFileLocation }); //add lib folder

@@ -2,18 +2,11 @@
 #define TEXTURES_H
 #include "defs.h"
 #include "upng.h"
-#include <stdint.h>
 
-typedef struct {
-  int width;
-  int height;
-  upng_t*  upng;
-  uint32_t *texture_buffer;
-} texture_t;
 
-texture_t wallTextures[NUM_TEXTURES];
+upng_t* textures[NUM_TEXTURES];
 
-void loadWallTextures(void);
-void freeWallTextures(void);
+void loadTextures(void);
+void freeTextures(void);
 
 #endif

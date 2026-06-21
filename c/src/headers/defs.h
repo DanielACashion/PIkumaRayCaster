@@ -7,8 +7,8 @@
 
 #define TILE_SIZE 64
 
-#define WINDOW_WIDTH 640
-#define WINDOW_HEIGHT 400
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 800
 
 #define FOV_ANGLE (60 * PI / 180)
 #define NUM_RAYS (WINDOW_WIDTH)
@@ -18,7 +18,7 @@
 
 #define MINIMAP_SCALE_FACTOR 0.125
 
-#define NUM_TEXTURES 8
+#define NUM_TEXTURES 14
 
 #define DIST_TO_PROJ_PLANE  (WINDOW_WIDTH * 0.5) / tan(FOV_ANGLE * 0.5)
 

@@ -11,5 +11,5 @@
 bool mapHasWallAt(float x, float y);
 bool isInsideMap(int x, int y);
 int wallColorAt(float x, float y);
-void renderMap(void);
+void renderMapGrid(void);
 #endif

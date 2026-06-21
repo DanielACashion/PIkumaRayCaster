@@ -3,12 +3,12 @@
 #include "headers/map.h"
 #include "headers/player.h"
 #include "headers/ray.h"
+#include "headers/sprites.h"
 #include "headers/textures.h"
 #include "headers/wall.h"
 #include <SDL.h>
 #include <stdbool.h>
 #include <stdio.h>
-
 
 bool isRunning = false;
 int lastFrameTicks = 1;
@@ -17,7 +17,7 @@ void setup(void) {
   isRunning = initializeWindow();
 
   // set texture
-  loadWallTextures();
+  loadTextures();
 }
 
 void processInput(void) {
@@ -77,21 +77,26 @@ void update(void) {
   movePlayer(deltatime);
   castAllRays();
   lastFrameTicks = currentTicks;
+  detectVisibleSprites();
 }
 
 void render(void) {
   // TODO:normal player pov
   clearColorBuffer(0x00EE30FF);
-  renderWallProjection();
 
-  renderMap();
-  renderRays();
-  renderPlayer();
+  renderWallProjection();
+  renderSpritesProjection();
+
+  renderMapGrid();
+  renderMapRays();
+  renderMapPlayer();
+  renderMapSprites();
+
   renderColorBuffer();
 }
 
 void releaseResources(void) {
-  freeWallTextures();
+  freeTextures();
   destroyWindow();
 }
 
